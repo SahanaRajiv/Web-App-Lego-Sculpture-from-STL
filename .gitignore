@@ -1,0 +1,23 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Local data/uploads and generated results
+uploads/
+static/results/
+
+# OS/editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log

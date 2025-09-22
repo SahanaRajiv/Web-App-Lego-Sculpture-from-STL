@@ -10,6 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 import random
 from collections import Counter
 from scipy.ndimage import label
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from brickalize import (
     Brick,
@@ -22,6 +23,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
+app.config['PREFERRED_URL_SCHEME'] = 'https'
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
