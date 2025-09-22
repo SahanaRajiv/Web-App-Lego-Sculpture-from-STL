@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>STL to LEGO</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('index') }}">STL to LEGO</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Convert</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('history') }}">History</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="mt-5">STL to LEGO Converter</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="mt-4">
+            <div class="form-group">
+                <label for="file">STL file</label>
+                <input type="file" class="form-control-file" id="file" name="file" required>
+            </div>
+            <div class="form-group">
+                <label for="grid_voxel_count">Number of layers (10-100)</label>
+                <input type="number" class="form-control" id="grid_voxel_count" name="grid_voxel_count" min="10" max="100" value="50" required>
+            </div>
+            <div class="form-group">
+                <label for="grid_direction">Direction</label>
+                <select class="form-control" id="grid_direction" name="grid_direction">
+                    <option value="x">X</option>
+                    <option value="y">Y</option>
+                    <option value="z" selected>Z</option>
+                </select>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="extract_shell" name="extract_shell" value="true">
+                <label class="form-check-label" for="extract_shell">Make model hollow (extract shell)</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="overlay_layers" name="overlay_layers" value="true">
+                <label class="form-check-label" for="overlay_layers">Overlay layers for context</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="generate_pdf" name="generate_pdf" value="true">
+                <label class="form-check-label" for="generate_pdf">Create PDF assembly instructions</label>
+            </div>
+             <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="color_by_shape" name="color_by_shape" value="true">
+                <label class="form-check-label" for="color_by_shape">Color bricks by shape</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="remove_hanging_bricks" name="remove_hanging_bricks" value="true">
+                <label class="form-check-label" for="remove_hanging_bricks">Remove Hanging Bricks (for non-hollow models)</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Convert</button>
+        </form>
+    </div>
+</body>
+</html> 

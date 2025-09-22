@@ -1,0 +1,8 @@
+Flask>=2.2,<3.0
+Werkzeug>=2.2,<3.0
+fpdf2>=2.7,<3.0
+trimesh==3.9.30
+Pillow>=9.0,<11.0
+numpy>=1.22,<2.0
+brickalize==1.0.2
+scipy>=1.8,<2.0

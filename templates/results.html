@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>LEGO Model Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .layer-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('index') }}">STL to LEGO</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Convert</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('history') }}">History</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="mt-5">Your LEGO Model</h1>
+        <a href="{{ url_for('download_model', filename=model_filename) }}" class="btn btn-success my-3">Download Full 3D Model (.stl)</a>
+        {% if pdf_filename %}
+        <a href="{{ url_for('download_pdf', filename=pdf_filename) }}" class="btn btn-danger my-3">Download PDF Instructions</a>
+        {% endif %}
+        <a href="{{ url_for('index') }}" class="btn btn-primary my-3">Convert another file</a>
+        <div class="row">
+            {% for image_file in image_files %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="{{ url_for('result_image', result_folder=result_folder, filename=image_file, v=cache_buster) }}" class="card-img-top layer-image" alt="{{ image_file }}">
+                    <div class="card-body">
+                        <p class="card-text">Layer {{ loop.index }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html> 
