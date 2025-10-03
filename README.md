@@ -1,7 +1,10 @@
 # STL to LEGO Converter
 
 Convert STL mesh files into layered LEGO brick models with images, optional PDF instructions, and a 3D STL of the brick assembly.
-
+#LEGO
+#Architecture
+#Sculpture
+#Art
 ## Features
 - Upload `.stl` and choose processing options
   - Number of layers and slicing direction (`X`, `Y`, `Z`)
