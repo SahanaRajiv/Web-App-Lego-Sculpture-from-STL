@@ -8,8 +8,9 @@ from fpdf import FPDF, XPos, YPos
 import trimesh
 from PIL import Image, ImageDraw, ImageFont
 import random
-from collections import Counter
+from collections import Counter, defaultdict
 from scipy.ndimage import label
+import logging
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from brickalize import (
@@ -35,6 +36,9 @@ app.config['RESULT_FOLDER'] = RESULT_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
+
+# Suppress noisy trimesh warnings (e.g., non-watertight mesh notices)
+logging.getLogger("trimesh").setLevel(logging.ERROR)
 
 def draw_grid_on_image(image_path, num_cells_x, num_cells_y, pixels_per_stud=20):
     """Draws a grid on the image and adds axis numbers, ensuring a square grid."""
@@ -330,51 +334,200 @@ def overlay_image_layers(image_files, image_folder):
 
 
 def brick_model_to_array(brick_model):
-    """Converts a BrickModel object back to a 3D NumPy array."""
-    array = np.zeros(brick_model.size, dtype=int)
+    """Converts a BrickModel object back to a 3D NumPy array.
+    Array axes are ordered as (z, y, x) to match layer-major processing.
+    """
+    x_size, y_size, z_size = brick_model.size[0], brick_model.size[1], brick_model.size[2]
+    array = np.zeros((z_size, y_size, x_size), dtype=int)
     if brick_model.layers:
         for layer_num, layer_bricks in brick_model.layers.items():
             for brick in layer_bricks:
-                x, y = brick['position']
+                x0, y0 = brick['position']
                 width, height = brick['size']
-                array[layer_num, y:y + height, x:x + width] = 1
+                # Clamp to bounds to avoid any off-by-one writes
+                x1 = min(x0 + width, x_size)
+                y1 = min(y0 + height, y_size)
+                if 0 <= layer_num < z_size and x0 < x_size and y0 < y_size:
+                    array[layer_num, y0:y1, x0:x1] = 1
     return array
 
 
-def remove_hanging_bricks(brick_model):
+def remove_hanging_bricks(brick_model, minimum_overlap_cells=2):
     """
-    Removes bricks that are not supported by the layer below by operating on the model's array representation.
+    Walk layers from top to bottom and ensure every brick overlaps a single brick
+    directly beneath it by at least `minimum_overlap_cells` studs. When the overlap
+    is insufficient we add rectangular "support stud" bricks to the lower layer
+    (and keep propagating the requirement downwards).
     """
-    
-    array = brick_model_to_array(brick_model)
-    
-    # Iterate from the second layer upwards
-    for z in range(1, array.shape[0]):
-        current_layer = array[z, :, :]
-        lower_layer = array[z - 1, :, :]
-        
-        # Find bricks (connected components) in the current layer
-        labeled_layer, num_features = label(current_layer)
-        
-        if num_features > 0:
-            for i in range(1, num_features + 1):
-                brick_mask = (labeled_layer == i)
-                
-                # Check if this brick is supported by the layer below
-                # Support is defined as any overlap between the brick's footprint and the lower layer
-                if not np.any(brick_mask & (lower_layer > 0)):
-                    array[z, :, :][brick_mask] = 0 # Remove unsupported brick
-    
-    # After removing hanging bricks, we need a new brick_model.
-    # We can reuse the Brickalizer to convert the array back to a model.
-    # Note: This requires the brick_set which is available in the calling context.
-    # This function will now return the array, and the conversion will happen in the route.
-    return array
+
+    if not brick_model.layers:
+        return np.zeros((0, 0, 0), dtype=int)
+
+    x_size, y_size, z_size = brick_model.size
+    occupancy = brick_model_to_array(brick_model)
+
+    bricks_by_layer = defaultdict(list)
+    for z, layer_bricks in brick_model.layers.items():
+        for brick in layer_bricks:
+            x0, y0 = brick["position"]
+            width, height = brick["size"]
+            x1 = min(x0 + width, x_size)
+            y1 = min(y0 + height, y_size)
+            if x0 >= x_size or y0 >= y_size or x1 <= 0 or y1 <= 0:
+                continue
+            area = max((x1 - x0) * (y1 - y0), 1)
+            bricks_by_layer[z].append(
+                {
+                    "x0": x0,
+                    "y0": y0,
+                    "x1": x1,
+                    "y1": y1,
+                    "area": area,
+                    "support": False,
+                }
+            )
+
+    def overlap_cells(brick_a, brick_b):
+        overlap_w = min(brick_a["x1"], brick_b["x1"]) - max(brick_a["x0"], brick_b["x0"])
+        overlap_h = min(brick_a["y1"], brick_b["y1"]) - max(brick_a["y0"], brick_b["y0"])
+        if overlap_w <= 0 or overlap_h <= 0:
+            return 0
+        return overlap_w * overlap_h
+
+    def dimension_candidates(required, width_limit, height_limit):
+        if width_limit <= 0 or height_limit <= 0:
+            return []
+        dims = set()
+        for height in range(1, height_limit + 1):
+            width = (required + height - 1) // height
+            if width <= width_limit:
+                dims.add((width, height))
+        for width in range(1, width_limit + 1):
+            height = (required + width - 1) // width
+            if height <= height_limit:
+                dims.add((width, height))
+        return sorted(dims, key=lambda wh: (wh[0] * wh[1], max(wh)))
+
+    def add_support_block(lower_z, brick, required_overlap):
+        lower_layer = occupancy[lower_z]
+        width_limit = brick["x1"] - brick["x0"]
+        height_limit = brick["y1"] - brick["y0"]
+        dims = dimension_candidates(required_overlap, width_limit, height_limit)
+        for width, height in dims:
+            max_x = brick["x1"] - width
+            max_y = brick["y1"] - height
+            for y in range(brick["y0"], max_y + 1):
+                for x in range(brick["x0"], max_x + 1):
+                    subarray = lower_layer[y : y + height, x : x + width]
+                    if np.any(subarray):
+                        continue
+                    lower_layer[y : y + height, x : x + width] = 1
+                    support_block = {
+                        "x0": x,
+                        "y0": y,
+                        "x1": x + width,
+                        "y1": y + height,
+                        "area": width * height,
+                        "support": True,
+                    }
+                    bricks_by_layer[lower_z].append(support_block)
+                    return support_block
+        return None
+
+    for z in range(z_size - 1, 0, -1):
+        current_layer = bricks_by_layer.get(z, [])
+        if not current_layer:
+            continue
+
+        lower_z = z - 1
+        lower_layer_blocks = bricks_by_layer[lower_z]
+
+        for brick in current_layer:
+            required_overlap = min(minimum_overlap_cells, brick["area"])
+            best_overlap = 0
+            for lower_brick in lower_layer_blocks:
+                overlap = overlap_cells(brick, lower_brick)
+                if overlap > best_overlap:
+                    best_overlap = overlap
+                if overlap >= required_overlap:
+                    break
+            else:
+                support_block = add_support_block(lower_z, brick, required_overlap)
+                # Recompute best overlap using the newly added block (if any).
+                if support_block:
+                    best_overlap = overlap_cells(brick, support_block)
+
+            if best_overlap < required_overlap:
+                # As a fallback, allow multiple different lower bricks to satisfy
+                # the requirement collectively so we at least avoid deleting bricks.
+                lower_layer = occupancy[lower_z]
+                footprint = lower_layer[brick["y0"] : brick["y1"], brick["x0"] : brick["x1"]]
+                if int(footprint.sum()) < required_overlap:
+                    # Add as many single studs as needed to reach the count.
+                    studs_needed = required_overlap - int(footprint.sum())
+                    zeros = np.argwhere(footprint == 0)
+                    for y_rel, x_rel in zeros:
+                        if studs_needed <= 0:
+                            break
+                        global_y = brick["y0"] + y_rel
+                        global_x = brick["x0"] + x_rel
+                        occupancy[lower_z, global_y, global_x] = 1
+                        studs_needed -= 1
+                        support_block = {
+                            "x0": global_x,
+                            "y0": global_y,
+                            "x1": global_x + 1,
+                            "y1": global_y + 1,
+                            "area": 1,
+                            "support": True,
+                        }
+                        bricks_by_layer[lower_z].append(support_block)
+
+    return occupancy
 
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def repair_stl_inplace(stl_path):
+    """Attempt to repair common STL issues to improve voxelization stability."""
+    try:
+        mesh = trimesh.load_mesh(stl_path, force='mesh', process=True)
+        # Basic cleanups
+        mesh.remove_duplicate_faces()
+        mesh.remove_degenerate_faces()
+        mesh.remove_unreferenced_vertices()
+        # Normals and holes
+        trimesh.repair.fix_normals(mesh)
+        try:
+            trimesh.repair.fill_holes(mesh)
+        except Exception:
+            pass
+        # Export back
+        mesh.export(stl_path)
+        return mesh.is_watertight
+    except Exception:
+        # If anything fails, proceed without blocking the pipeline
+        return False
+
+
+def nudge_stl_inplace(stl_path):
+    """Apply a tiny translation so triangles don’t sit exactly on voxel grid planes."""
+    try:
+        mesh = trimesh.load_mesh(stl_path, force='mesh', process=False)
+        # Compute a small epsilon relative to model size (fallback to fixed tiny shift)
+        try:
+            bbox = mesh.bounds
+            size = float((bbox[1] - bbox[0]).max()) if bbox is not None else 1.0
+            eps = max(size * 1e-6, 1e-6)
+        except Exception:
+            eps = 1e-6
+        mesh.apply_translation([eps, eps, eps])
+        mesh.export(stl_path)
+    except Exception:
+        pass
 
 @app.route('/')
 def index():
@@ -415,7 +568,10 @@ def upload_file():
 
         # --- Brickalize logic ---
         brick_set = BrickSet([Brick(1, 2), Brick(1, 4), Brick(2, 2), Brick(1, 1), Brick(1, 3), Brick(2, 4), Brick(1, 6), Brick(1, 1, True), Brick(1, 2, True)])
-        brick_array = Brickalizer.voxelize_stl(stl_file_path, grid_voxel_count, grid_direction, fast_mode=True)
+        # Repair STL and nudge to avoid boundary artifacts, then use robust voxelization
+        repair_stl_inplace(stl_file_path)
+        nudge_stl_inplace(stl_file_path)
+        brick_array = Brickalizer.voxelize_stl(stl_file_path, grid_voxel_count, grid_direction, fast_mode=False)
         
         if extract_shell:
             processing_array = Brickalizer.extract_shell_from_3d_array(brick_array)

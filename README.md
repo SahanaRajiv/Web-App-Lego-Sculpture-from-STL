@@ -9,7 +9,7 @@ Convert STL mesh files into layered LEGO brick models with images, optional PDF 
   - Overlay previous layer for visual context
   - Color bricks by shape
   - Generate PDF assembly instructions
-  - Remove hanging bricks (non-hollow): ensures each brick has support below
+- Support studs for weak overhangs (non-hollow): automatically adds 1x1 bricks so every brick touches the layer below at least twice
 - Outputs
   - Per-layer PNGs with grid and brick outlines
   - Optional PDF instruction booklet
@@ -60,7 +60,7 @@ Open `http://127.0.0.1:5000` and upload an STL.
 - Uploaded files are saved to `uploads/`.
 - If "Create PDF assembly instructions" is checked, a PDF is written to `static/results/<filename>_instructions.pdf` and a download button appears on the results page.
 - If "Color bricks by shape" is enabled, layer images include a legend plus dark outlines for easier identification. Default images also include dark outlines.
-- "Remove Hanging Bricks" removes unsupported bricks in non-hollow mode so every brick rests on at least one brick below.
+- "Add support studs for weak overhangs" inserts 1x1 supports in non-hollow mode so each brick contacts the layer below at least twice.
 
 Fonts: the app will try to use `arial.ttf` and `arialbd.ttf` for labels; if unavailable it falls back to default fonts.
 
