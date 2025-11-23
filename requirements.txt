@@ -29,7 +29,7 @@ matplotlib==3.9.4
 narwhals==2.10.1
 nbformat==5.10.4
 nest-asyncio==1.6.0
-numpy==1.26.4
+numpy
 opencv-python==4.11.0.86
 packaging==25.0
 pandas==2.3.3
