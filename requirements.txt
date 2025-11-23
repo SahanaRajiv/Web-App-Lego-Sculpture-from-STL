@@ -1,5 +1,5 @@
 Pillow>=9.0,<11.0
-numpy>=1.22,<2.0
+numpy
 brickalize==1.0.2
-scipy>=1.8,<2.0
+scipy
 gunicorn>=20.1,<23

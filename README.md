@@ -23,7 +23,8 @@ Convert STL mesh files into layered LEGO brick models with images, optional PDF 
 Install dependencies:
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
+source venv/bin/activate
 # Windows PowerShell
 . .venv\Scripts\Activate.ps1
 # macOS/Linux
