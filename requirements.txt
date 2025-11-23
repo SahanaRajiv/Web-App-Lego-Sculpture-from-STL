@@ -48,7 +48,7 @@ retrying==1.4.2
 rpds-py==0.27.1
 rtree==1.4.1
 scikit-learn==1.6.1
-scipy==1.13.1
+scipy
 six==1.17.0
 threadpoolctl==3.6.0
 tqdm==4.67.1
