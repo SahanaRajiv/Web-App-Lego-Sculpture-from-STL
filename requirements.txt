@@ -1,7 +1,7 @@
 addict==2.4.0
 attrs==25.4.0
 blinker==1.9.0
-brickalize==1.0.2
+#brickalize==1.0.2
 certifi==2025.10.5
 charset-normalizer==3.4.4
 click==8.1.8
