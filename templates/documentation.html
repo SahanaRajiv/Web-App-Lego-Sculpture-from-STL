@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Building a LEGO Converter with AI | Sahana Rajiv</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --navy: #14213d; --blue: #315d9d; --gold: #f2b134; --paper: #fbfaf7; --ink: #26313e; }
+        * { box-sizing: border-box; }
+        body { margin: 0; color: var(--ink); background: var(--paper); font-family: 'DM Sans', sans-serif; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px clamp(20px, 5vw, 72px); color: white; background: var(--navy); }
+        .topbar a { color: white; font-size: .92rem; font-weight: 700; text-decoration: none; }
+        .hero { padding: 70px 22px; color: white; text-align: center; background: linear-gradient(120deg, #143058, #477fb4); }
+        .hero h1 { max-width: 900px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 4.4rem); line-height: 1.08; }
+        .hero p { max-width: 780px; margin: 20px auto 0; font-size: 1.1rem; line-height: 1.7; }
+        main { max-width: 920px; margin: auto; padding: 55px 22px 70px; }
+        section { margin-top: 54px; }
+        section:first-child { margin-top: 0; }
+        h2, h3 { color: var(--navy); font-family: 'Playfair Display', serif; }
+        h2 { margin: 0 0 16px; font-size: clamp(1.85rem, 3vw, 2.7rem); line-height: 1.2; }
+        h3 { margin: 0 0 10px; font-size: 1.3rem; }
+        p, li { line-height: 1.75; }
+        .lead { color: #4f5c69; font-size: 1.12rem; }
+        .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 20px; }
+        .card { padding: 24px; border: 1px solid #dce6f0; border-radius: 16px; background: white; box-shadow: 0 6px 18px rgba(20,33,61,.07); }
+        .number { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; margin-bottom: 12px; border-radius: 50%; color: #3a2a08; background: var(--gold); font-size: .92rem; font-weight: 700; }
+        .callout { padding: 30px; border-radius: 18px; color: white; background: var(--navy); }
+        .callout h2, .callout h3 { color: white; }
+        .button { display: inline-block; padding: 12px 18px; border-radius: 7px; color: #332400; background: var(--gold); font-weight: 700; text-decoration: none; }
+        footer { padding: 26px 22px; color: #dfeeff; background: var(--navy); font-size: .9rem; text-align: center; }
+        @media (max-width: 650px) { .cards { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="topbar"><a href="{{ url_for('index') }}">← Back to the Girl Scout Gold Award Project</a><a href="{{ url_for('convert_page') }}">Open the Converter</a></header>
+    <section class="hero">
+        <h1>My Girl Scout Gold Award: Building a LEGO Converter with AI</h1>
+        <p>How AI tools helped me learn, create, solve technical puzzles, and turn digital ideas into real-life LEGO creations.</p>
+    </section>
+    <main>
+        <section>
+            <h2>Introducing Cursor: My Coding Sidekick</h2>
+            <p class="lead"><strong>My Personal AI Coding Buddy</strong></p>
+            <p>Have you ever wished you had a friend who knew everything about coding? For me, that's Cursor. It's a smart computer program that helps me write code, acting like my personal coding tutor or a helpful sidekick.</p>
+            <p>Cursor isn't just a basic text editor; it understands my whole coding project. I can tell it what I want in plain English, and it suggests code, helps me fix bugs, and creates new files. It feels like I have a coding superpower!</p>
+            <div class="cards">
+                <article class="card"><h3>Code Faster</h3><p>Cursor helps me code more quickly by suggesting what I want to type, making my workflow more efficient.</p></article>
+                <article class="card"><h3>Understanding Tricky Code</h3><p>When code gets confusing, Cursor explains difficult parts simply, so I can understand them without too much trouble.</p></article>
+                <article class="card"><h3>Fixing Bugs</h3><p>Those frustrating errors? Cursor helps me find and fix them, even the tricky ones.</p></article>
+                <article class="card"><h3>Improving My Skills</h3><p>Cursor gives me practical tips and shows me how experienced developers build software.</p></article>
+            </div>
+            <p>My project was about turning any 3D model into LEGO bricks. It involved voxelization (like building with tiny 3D pixels), 3D geometry, image generation, PDFs, and online publishing. Cursor helped make these advanced concepts much more manageable.</p>
+        </section>
+
+        <section>
+            <h2>My LEGO Project!</h2>
+            <p>I built software that lets you take any 3D design you find online or create yourself, and it shows you how to build it with real LEGO bricks. My online tool:</p>
+            <ul>
+                <li>Turns digital 3D models into LEGO creations.</li>
+                <li>Gives easy-to-follow, step-by-step pictures like a LEGO manual.</li>
+                <li>Tells you exactly which color bricks you need.</li>
+                <li>Makes sure a creation will not have unsupported or floating pieces.</li>
+                <li>Creates a new 3D model of the LEGO creation or printable PDF instructions.</li>
+            </ul>
+            <p>It is fun, but it also helps you understand STEM: how 3D shapes work, how digital ideas become physical objects, and some of the smart ways engineers build things.</p>
+        </section>
+
+        <section>
+            <h2>Recap: How Cursor Helped Me Build This</h2>
+            <p>Developing a complex application that converts 3D models into physically buildable LEGO structures was a significant undertaking. Cursor became an invaluable partner throughout every phase of the project.</p>
+            <div class="cards">
+                <article class="card"><span class="number">1</span><h3>Getting Started</h3><p>Setting up the digital environment, selecting languages and libraries for 3D model parsing and LEGO brick representation, and configuring development tools.</p></article>
+                <article class="card"><span class="number">2</span><h3>Adding Core Features</h3><p>Developing algorithms to interpret 3D formats, stable brick arrangements, and step-by-step assembly instructions.</p></article>
+                <article class="card"><span class="number">3</span><h3>Fixing Complex Bugs</h3><p>Identifying and resolving glitches, rendering discrepancies, and stability problems in proposed LEGO structures.</p></article>
+                <article class="card"><span class="number">4</span><h3>Documenting My Work</h3><p>Creating user guides for custom instructions, API documentation, and the process for exporting models and PDFs.</p></article>
+                <article class="card"><span class="number">5</span><h3>Refining the Codebase</h3><p>Optimizing performance, refactoring for readability, and implementing robust error handling.</p></article>
+            </div>
+            <p>From generating design options to ensuring structural integrity and deployment, Cursor made developing this innovative tool smoother and more enjoyable.</p>
+        </section>
+
+        <section>
+            <h2>Cool Features I Built!</h2>
+            <div class="cards">
+                <article class="card"><span class="number">1</span><h3>No More Wobbly Builds!</h3><p>My program makes sure every brick is stable, stopping floating bricks that are not supported.</p></article>
+                <article class="card"><span class="number">2</span><h3>Clear, Easy Instructions!</h3><p>Color codes, a list of bricks, and clear step-by-step pictures make building easier.</p></article>
+                <article class="card"><span class="number">3</span><h3>Seeing Every Brick Clearly!</h3><p>Grid lines, brick outlines, colors by shape, and faint lower-layer outlines help with placement.</p></article>
+            </div>
+        </section>
+
+        <section>
+            <h2>Coding Issues and How I Solved Them!</h2>
+            <div class="cards">
+                <article class="card"><span class="number">01</span><h3>The Challenge</h3><p>When I wanted to show my app online, my browser gave me an <code>ERR_SSL_PROTOCOL_ERROR</code>.</p></article>
+                <article class="card"><span class="number">02</span><h3>Decoding the Problem</h3><p>The app was talking HTTP while the browser expected HTTPS. The browser remembered past secure chats and would not allow the less-secure connection.</p></article>
+                <article class="card"><span class="number">03</span><h3>The Fix</h3><p>I used a certificate and configured a reverse proxy to handle the secure conversations. The browser could then connect safely.</p></article>
+            </div>
+            <p>Cursor helped me understand HTTP versus HTTPS, browser security, and how to make the app accessible to everyone.</p>
+        </section>
+
+        <section>
+            <h2>Sharing My Code!</h2>
+            <div class="cards">
+                <article class="card"><h3>My Project's Setup</h3><p>I locked in the necessary code parts so the project always works as planned, like baking with a perfect recipe.</p></article>
+                <article class="card"><h3>My How-To Guide</h3><p>I wrote a clear README so anyone can figure out how to use the app.</p></article>
+                <article class="card"><h3>Hidden Settings &amp; Home</h3><p>I set up files to keep sensitive information hidden and gave the app its own place on the internet.</p></article>
+                <article class="card"><h3>Ready to Launch!</h3><p>I refined the technical details so the app runs smoothly.</p></article>
+            </div>
+            <p><a class="button" href="https://github.com/SahanaRajiv/Web-App-Lego-Sculpture-from-STL" target="_blank" rel="noopener">Explore the Project Code on GitHub</a></p>
+        </section>
+
+        <section>
+            <h2>Building My Own LEGO Creations</h2>
+            <div class="cards">
+                <article class="card"><h3>All the Bricks You Need!</h3><p>The instructions show the exact list of every brick needed to get a build started.</p></article>
+                <article class="card"><h3>Clear Step-by-Step Guides!</h3><p>Visual steps for each layer show exactly where every brick goes.</p></article>
+                <article class="card"><h3>Color-Coded Hints!</h3><p>Colors help builders find the right brick faster.</p></article>
+                <article class="card"><h3>See It Before You Build It!</h3><p>A 3D view gives a preview of the finished LEGO model before building starts.</p></article>
+            </div>
+        </section>
+
+        <section>
+            <h2>Check Out What I Built!</h2>
+            <ul>
+                <li><strong>I Built a Converter!</strong> A website tool that turns any 3D model into LEGO building instructions.</li>
+                <li><strong>I Added Upgrades!</strong> Features improve stability, appearance, and step-by-step guidance.</li>
+                <li><strong>I Solved Tech Challenges!</strong> I worked through Python, Flask, web setup, and integration problems.</li>
+                <li><strong>I Made It User-Friendly!</strong> I prepared clear instructions so anyone can use the project.</li>
+                <li><strong>I Learned New Tech Skills!</strong> I learned shape conversion, data analysis, image processing, and web security.</li>
+            </ul>
+        </section>
+
+        <section class="callout">
+            <h2>My Gold Award STEM Project: 3D to LEGO</h2>
+            <p>For my Girl Scout Gold Award project, I developed an online tool that converts any 3D design into a LEGO model. The project combined AI tools with my own programming skills, making 3D geometry and digital building accessible for more people.</p>
+            <p>Using an AI coding assistant like Cursor helped me work through technical challenges and turn complex problems into real solutions. The result connects digital designs to physical LEGO builds.</p>
+            <h3>Want to Learn More?</h3>
+            <p>Explore the code, details about how it works, and resources for trying your own STL-to-LEGO conversion.</p>
+            <a class="button" href="{{ url_for('index') }}">Visit My Resource Page</a>
+        </section>
+    </main>
+    <footer>Girl Scout Gold Award Project · Sahana Rajiv</footer>
+</body>
+</html>

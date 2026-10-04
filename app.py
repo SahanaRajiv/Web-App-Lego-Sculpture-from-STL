@@ -535,6 +535,10 @@ def index():
 def how_to_use():
     return redirect(USER_MANUAL_URL)
 
+@app.route('/documentation')
+def documentation():
+    return render_template('documentation.html')
+
 @app.route('/convert')
 def convert_page():
     existing_files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith('.stl') and not f.endswith('_brick_model.stl')]
