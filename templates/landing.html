@@ -2,160 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Girl Scout Gold Award Project | Sahana Rajiv</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --navy: #14213d; --blue: #315d9d; --gold: #f2b134; --orange: #db741e; --paper: #fbfaf7; --ink: #26313e; }
+        :root { --ink: #38383c; --heading: #403c4e; --link: #cc3000; --peach: #ffd8cc; --outline: #d7b9ae; }
         * { box-sizing: border-box; }
-        body { margin: 0; color: var(--ink); background: var(--paper); font-family: 'DM Sans', sans-serif; }
-        a { color: inherit; }
-        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px clamp(20px, 5vw, 72px); color: white; background: var(--navy); }
-        .topbar a { color: white; font-size: .92rem; font-weight: 700; text-decoration: none; }
-        .topbar .name { color: #dfeeff; }
-        .hero { padding: 64px clamp(20px, 7vw, 110px) 74px; color: white; background: linear-gradient(118deg, #143058 0%, #315d9d 63%, #477fb4 100%); }
-        .hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .7fr); gap: clamp(30px, 6vw, 90px); align-items: center; max-width: 1200px; margin: auto; }
-        .kicker { margin: 0 0 14px; color: #ffe8a3; font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; }
-        h1 { margin: 0; font-size: clamp(2.7rem, 6vw, 5rem); line-height: 1.05; }
-        .byline { margin: 15px 0 0; color: #dfeeff; font-size: 1.12rem; font-weight: 600; }
-        .hero-copy { max-width: 660px; margin: 24px 0 0; font-size: 1.12rem; line-height: 1.75; }
-        .hero img { width: 100%; aspect-ratio: 4 / 3; display: block; border: 8px solid rgba(255,255,255,.22); border-radius: 20px; box-shadow: 0 18px 38px rgba(5,20,42,.35); object-fit: cover; }
-        .container { max-width: 1120px; margin: auto; padding: 58px 22px; }
-        .section-label { margin: 0 0 8px; color: var(--orange); font-size: .78rem; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
-        h2 { margin: 0; color: var(--navy); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.18; }
-        h3 { margin: 0; color: var(--navy); font-size: 1.42rem; line-height: 1.25; }
-        p { line-height: 1.7; }
-        .intro { max-width: 800px; margin: 18px 0 38px; font-size: 1.08rem; }
-        .start-grid, .path-grid, .resource-grid { display: grid; gap: 22px; }
-        .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .path-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 24px; }
-        .card { height: 100%; padding: 28px; border: 1px solid #dce6f0; border-radius: 18px; background: white; box-shadow: 0 8px 22px rgba(20,33,61,.08); }
-        .card.featured { border-top: 6px solid var(--gold); }
-        .card p { margin: 12px 0 20px; }
-        .button { display: inline-block; padding: 11px 17px; border-radius: 7px; color: white; background: var(--blue); font-size: .93rem; font-weight: 700; text-decoration: none; transition: transform .15s ease, background .15s ease; }
-        .button:hover { background: #244a7f; transform: translateY(-1px); }
-        .button.gold { color: #3a2a08; background: var(--gold); }
-        .button.gold:hover { background: #e5a31c; }
-        .video { overflow: hidden; position: relative; margin-top: 24px; padding-top: 56.25%; border-radius: 18px; box-shadow: 0 9px 25px rgba(20,33,61,.15); }
-        .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-        .project-image { width: 100%; height: 210px; margin: -28px -28px 24px; border-radius: 17px 17px 0 0; object-fit: cover; width: calc(100% + 56px); }
-        .callout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 30px; align-items: center; margin-top: 56px; padding: clamp(28px, 5vw, 54px); border-radius: 24px; color: white; background: #264d77; }
-        .callout h2, .callout h3 { color: white; }
-        .callout img { width: 100%; border-radius: 14px; object-fit: cover; }
-        .brick-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; margin: 19px 0 23px; padding-left: 20px; line-height: 1.5; }
-        .resources { margin-top: 58px; padding-top: 50px; border-top: 1px solid #dce6f0; }
-        .resource-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 26px; }
-        .link-list { margin: 14px 0 0; padding: 0; list-style: none; }
-        .link-list li + li { margin-top: 10px; }
-        .link-list a { color: var(--blue); font-weight: 700; }
-        .footnote { margin: 30px 0 0; color: #596777; font-size: .9rem; }
-        footer { padding: 26px 22px; color: #dfeeff; background: var(--navy); font-size: .9rem; text-align: center; }
-        @media (max-width: 780px) { .hero-grid, .callout, .start-grid, .path-grid, .resource-grid { grid-template-columns: 1fr; } .hero { padding-top: 47px; } .hero img { max-width: 570px; } }
-        @media (max-width: 430px) { .topbar { align-items: flex-start; flex-direction: column; } .brick-list { grid-template-columns: 1fr; } }
+        html { background: #fff; }
+        body { min-width: 0; margin: 0; color: var(--ink); background: #fff; font-family: 'Open Sans', Arial, sans-serif; font-size: 16px; line-height: 1.58; }
+        body::before { position: fixed; z-index: -1; inset: 0; content: ''; background: linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.89)), url("{{ url_for('static', filename='images/gamma-project-background.png') }}") center top / cover no-repeat; }
+        a { color: var(--link); font-weight: 700; text-decoration: underline; text-underline-offset: .12em; }
+        .deck { width: min(1160px, 100%); margin: 0 auto; padding: 0 clamp(18px, 5.1vw, 63px); }
+        .gamma-card { margin: 0; padding: 74px 0; }
+        .intro-card { min-height: 2375px; }
+        .title, h2, h3, h4 { margin: 0; color: var(--heading); font-family: Merriweather, Georgia, serif; font-weight: 700; }
+        .title { font-size: clamp(31px, 3.2vw, 39.375px); line-height: 1.25; }
+        .byline, .back-link, .start-title, .resource-title { font-family: Merriweather, Georgia, serif; font-weight: 700; }
+        .byline { margin: 2px 0 0; color: var(--heading); font-size: clamp(18px, 1.92vw, 23.625px); line-height: 1.25; }
+        .back-link { display: inline-block; margin-top: 5px; font-size: clamp(18px, 1.92vw, 23.625px); line-height: 1.25; }
+        .hero-image { display: block; width: 100%; height: auto; margin: 38px 0 41px; object-fit: contain; }
+        .overview { max-width: 930px; margin: 0 0 44px; font-size: clamp(16px, 1.28vw, 19.6875px); line-height: 1.62; }
+        .start-panel { margin: 0 0 17px; padding: 16px; background: var(--peach); }
+        .start-title { margin: 0 0 13px; color: var(--heading); font-size: clamp(18px, 1.92vw, 23.625px); line-height: 1.25; }
+        .start-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 23px; }
+        .start-links p { margin: 0; }
+        .step-panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 9px; margin-top: 16px; padding: 16px 24px; border: 1px solid var(--outline); background: rgba(255,255,255,.93); }
+        h4 { font-size: clamp(17px, 1.6vw, 19.6875px); line-height: 1.35; }
+        .step-panel p { max-width: 920px; margin: 0; }
+        .resources { margin-top: 39px; }
+        .resource-title { margin-bottom: 23px; font-size: clamp(24px, 2.56vw, 31.5px); line-height: 1.25; }
+        .resources > p { max-width: 920px; margin: 0 0 22px; }
+        .resource-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 31px; }
+        .resource-box { min-height: 150px; padding: 16px 24px; border: 1px solid var(--outline); background: rgba(255,255,255,.93); }
+        .resource-box h3 { font-size: clamp(18px, 1.92vw, 23.625px); line-height: 1.32; }
+        .resource-box ul { margin: 15px 0 0; padding: 0; list-style: none; }
+        .resource-box li + li { margin-top: 8px; }
+        .footnote { margin: 32px 0 0 !important; font-size: 14px; line-height: 1.55; }
+        .donation-card { padding-top: 74px; padding-bottom: 74px; background: rgba(255,255,255,.94); }
+        .donation-card h2 { font-size: clamp(31px, 3.2vw, 39.375px); line-height: 1.25; }
+        .donation-card > p { max-width: 900px; margin: 22px 0 27px; font-size: clamp(16px, 1.28vw, 19.6875px); }
+        .project-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 39px; margin-bottom: 35px; }
+        .project-pair img { display: block; width: 100%; height: auto; }
+        .donation-card h3 { margin-top: 29px; font-size: clamp(24px, 2.56vw, 31.5px); line-height: 1.25; }
+        .brick-list { margin: 17px 0 13px; padding-left: 23px; }
+        .brick-list li + li { margin-top: 3px; }
+        .donation-card .compact { max-width: 900px; margin: 13px 0; }
+        footer { padding: 25px 18px; color: var(--ink); background: rgba(255,255,255,.94); border-top: 1px solid #e2d9d4; text-align: center; font-size: 14px; }
+        @media (max-width: 760px) { .intro-card { min-height: 0; } .gamma-card { padding: 42px 0; } .hero-image { margin: 25px 0 30px; } .start-links, .resource-grid, .project-pair { grid-template-columns: 1fr; gap: 17px; } .step-panel, .resource-box { padding: 16px; } .project-pair { margin-bottom: 27px; } }
     </style>
 </head>
 <body>
-    <header class="topbar">
-        <a href="https://www.sahanarajiv.com/">← Back to sahanarajiv.com</a>
-        <span class="name">Sahana Rajiv</span>
-    </header>
-    <main>
-        <section class="hero">
-            <div class="hero-grid">
-                <div>
-                    <p class="kicker">Girl Scout Gold Award Project</p>
-                    <h1>Girl Scout Gold Award Project</h1>
-                    <p class="byline">by Sahana Rajiv</p>
-                    <p class="hero-copy">Welcome to my comprehensive resource hub for my Girl Scout Gold Award project: <strong>Building a LEGO Converter with Artificial Intelligence (AI).</strong> Explore the demo videos, final code implementation, pre-built models, and helpful resources.</p>
-                </div>
-                <img src="{{ url_for('static', filename='images/girl-scout-lego-project.jpg') }}" alt="Sahana's Girl Scout Gold Award LEGO project">
-            </div>
+    <main class="deck">
+        <section class="gamma-card intro-card">
+            <h1 class="title">Girl Scout Gold Award Project</h1>
+            <p class="byline">by Sahana Rajiv</p>
+            <a class="back-link" href="https://www.sahanarajiv.com/">← Back to sahanarajiv.com</a>
+            <img class="hero-image" src="{{ url_for('static', filename='images/girl-scout-lego-project.jpg') }}" alt="Sahana Rajiv with LEGO models from her Girl Scout Gold Award project">
+            <p class="overview">Welcome to my comprehensive resource hub for my Girl Scout Gold Award project: <strong>Building a LEGO Converter with Artificial Intelligence (AI).</strong> This page contains all the essential links and materials you need to explore my project, from the demo videos to the final code implementation, pre-built models and additional resources.</p>
+            <section class="start-panel"><h2 class="start-title">Start Here</h2><div class="start-links"><p><a href="{{ user_manual_url }}" target="_blank" rel="noopener">1) Link to My Comprehensive User Manual</a></p><p><a href="https://youtu.be/IZhqTz4GxcY" target="_blank" rel="noopener">2) My YouTube Seminar on How to Assemble a LEGO Model!</a><br>In this video, we will build a 10-layer LEGO duck using this instruction set I created using my software.</p></div></section>
+            <section class="step-panel"><h4>Step 1 (Beginner Level):</h4><h4>Download My Pre-built Instruction Kits and Start Building More Models!</h4><p>Each kit contains the original Stereolithography (STL) file, PDF assembly instructions for the LEGO model, and the final brick-model STL output. Perfect for getting started quickly with your own builds.</p><p><a href="{{ url_for('models') }}">Download Models</a></p><p><a href="{{ url_for('convert_page') }}">Click Here To Converting Using My Web App!</a></p></section>
+            <section class="step-panel"><h4>Step 2 (Advanced Level):</h4><h4>Download My Code from GitHub and Create New Models!</h4><p>Access the complete source code and deployment files for the web application.</p><p><a href="https://github.com/SahanaRajiv/Web-App-Lego-Sculpture-from-STL" target="_blank" rel="noopener">View Code</a></p></section>
+            <section class="step-panel"><h4>Step 3 (Master Level):</h4><h4>Learn More About How I Used AI to Build This Software and Make Your Own Modifications!</h4><p>Explore the technical journey of building the LEGO Converter with AI.</p><p><a href="{{ url_for('documentation') }}">Read Documentation</a></p></section>
+            <section class="resources"><h2 class="resource-title">Learning Resources</h2><p>To help you get started with the tools and techniques used in this project, I've compiled helpful tutorials and resources.</p><div class="resource-grid"><section class="resource-box"><h3>YouTube Videos on Cursor</h3><ul><li><a href="https://www.youtube.com/watch?v=Rgz6mX93C4Y" target="_blank" rel="noopener">Cursor Tutorial Part 1</a></li><li><a href="https://www.youtube.com/watch?v=ocMOZpuAMw4" target="_blank" rel="noopener">Cursor Tutorial Part 2</a></li></ul></section><section class="resource-box"><h3>Free STL File Websites</h3><ul><li><a href="https://www.thingiverse.com/" target="_blank" rel="noopener">Thingiverse</a></li><li><a href="https://cults3d.com/" target="_blank" rel="noopener">Cults3D</a></li><li><a href="https://thangs.com/" target="_blank" rel="noopener">Thangs</a></li></ul></section></div><p class="footnote">*A Stereolithography (STL) file is a standard file format used for 3D printing and computer-aided design (CAD). It represents a 3D model as a series of connected triangles, describing only the surface geometry of a three-dimensional object without any color, texture, or other common CAD model attributes.</p></section>
         </section>
-
-        <section class="container">
-            <p class="section-label">Start Here</p>
-            <h2>Build a LEGO model with my project</h2>
-            <div class="start-grid" style="margin-top: 26px;">
-                <article class="card featured">
-                    <h3>1) Link to My Comprehensive User Manual</h3>
-                    <p>Everything you need to understand the LEGO converter, choose your settings, and use the generated instruction files.</p>
-                    <a class="button gold" href="{{ user_manual_url }}" target="_blank" rel="noopener">User Manual</a>
-                </article>
-                <article class="card featured">
-                    <h3>2) My YouTube Seminar on How to Assemble a LEGO Model!</h3>
-                    <p>In this video, we build a 10-layer LEGO duck using the instruction set created by my software.</p>
-                    <a class="button gold" href="https://youtu.be/IZhqTz4GxcY" target="_blank" rel="noopener">Watch the Video</a>
-                </article>
-            </div>
-            <div class="video" aria-label="YouTube seminar on assembling a LEGO model">
-                <iframe src="https://www.youtube-nocookie.com/embed/IZhqTz4GxcY" title="How to Assemble a LEGO Model" allowfullscreen></iframe>
-            </div>
-
-            <div class="path-grid">
-                <article class="card">
-                    <img class="project-image" src="{{ url_for('static', filename='images/rubber-duck.jpg') }}" alt="Rubber duck STL model">
-                    <p class="section-label">Step 1 (Beginner Level)</p>
-                    <h3>Download My Pre-built Instruction Kits and Start Building More Models!</h3>
-                    <p>Each folder contains the original Stereolithography (STL) file, PDF assembly instructions for the LEGO model, and the final STL output. Perfect for getting started quickly with your own builds.</p>
-                    <p><a class="button" href="https://drive.google.com/drive/folders/1rAR3rhOc7ckPCzZoN25N%20NWTg9YGwe?usp=drive_link" target="_blank" rel="noopener">Download Models</a></p>
-                    <a href="{{ url_for('convert_page') }}">Click Here To Converting Using My Web App!</a>
-                </article>
-                <article class="card">
-                    <img class="project-image" src="{{ url_for('static', filename='images/rubber-duck-brick-model.jpg') }}" alt="Converted LEGO duck model">
-                    <p class="section-label">Step 2 (Advanced Level)</p>
-                    <h3>Download My Code from GitHub and Create New Models!</h3>
-                    <p>Access the complete source code and deployment files for the web application.</p>
-                    <a class="button" href="https://github.com/SahanaRajiv/Web-App-Lego-Sculpture-from-STL" target="_blank" rel="noopener">View Code</a>
-                </article>
-                <article class="card">
-                    <p class="section-label">Step 3 (Master Level)</p>
-                    <h3>Learn More About How I Used AI to Build This Software and Make Your Own Modifications!</h3>
-                    <p>Explore the technical journey of building the LEGO Converter with AI.</p>
-                    <a class="button" href="{{ url_for('documentation') }}">Read Documentation</a>
-                </article>
-            </div>
-
-            <section class="resources">
-                <p class="section-label">Learning Resources</p>
-                <h2>Helpful tutorials and model sources</h2>
-                <p class="intro">To help you get started with the tools and techniques used in this project, I've compiled helpful tutorials and resources.</p>
-                <div class="resource-grid">
-                    <article class="card">
-                        <h3>YouTube Videos on Cursor</h3>
-                        <ul class="link-list">
-                            <li><a href="https://www.youtube.com/watch?v=Rgz6mX93C4Y" target="_blank" rel="noopener">Cursor Tutorial Part 1</a></li>
-                            <li><a href="https://www.youtube.com/watch?v=ocMOZpuAMw4" target="_blank" rel="noopener">Cursor Tutorial Part 2</a></li>
-                        </ul>
-                    </article>
-                    <article class="card">
-                        <h3>Free STL File Websites</h3>
-                        <ul class="link-list">
-                            <li><a href="https://www.thingiverse.com/" target="_blank" rel="noopener">Thingiverse</a></li>
-                            <li><a href="https://cults3d.com/" target="_blank" rel="noopener">Cults3D</a></li>
-                            <li><a href="https://thangs.com/" target="_blank" rel="noopener">Thangs</a></li>
-                        </ul>
-                    </article>
-                </div>
-                <p class="footnote">*A Stereolithography (STL) file is a standard file format used for 3D printing and computer-aided design (CAD). It represents a 3D model as a series of connected triangles, describing only the surface geometry of a three-dimensional object without color, texture, or other common CAD model attributes.</p>
-            </section>
-
-            <section class="callout">
-                <img src="{{ url_for('static', filename='images/lego_duck.jpeg') }}" alt="LEGO duck kit">
-                <div>
-                    <h2>Build &amp; Donate a LEGO Duck Kit</h2>
-                    <p>Make a difference by building a LEGO duck kit and donating it to a child in need! Follow the instructions to assemble your own kit, then donate it to Second Chance Toys to bring joy and creativity to children.</p>
-                    <h3>Bricks Needed for the Kit:</h3>
-                    <ul class="brick-list">
-                        <li>1x1 bricks: 1 (pink/red color)</li><li>1x2 bricks: 5 (olive/gray color)</li><li>1x3 bricks: 5 (green color)</li><li>1x4 bricks: 6 (dark purple color)</li><li>1x6 bricks: 34 (purple color)</li><li>2x4 bricks: 5 (teal color)</li>
-                    </ul>
-                    <p><strong>Total: 56 bricks</strong></p>
-                    <p><a class="button gold" href="{{ url_for('static', filename='downloads/Rubber_Duck_instructions.pdf') }}" target="_blank" rel="noopener">Download the complete assembly instructions</a></p>
-                    <h3>Donate your kit to Second Chance Toys</h3>
-                    <p>Second Chance Toys is a nonprofit organization that collects and distributes gently used toys to children in need. Your LEGO duck kit donation will brighten a child's day and inspire creativity!</p>
-                    <a href="https://www.secondchancetoys.org/" target="_blank" rel="noopener">Second Chance Toys</a>
-                </div>
-            </section>
+        <section class="gamma-card donation-card">
+            <h2>Build &amp; Donate a LEGO Duck Kit</h2><p>Make a difference by building a LEGO duck kit and donating it to a child in need! Follow the instructions to assemble your own kit, then donate it to Second Chance Toys to bring joy and creativity to children.</p>
+            <div class="project-pair"><img src="{{ url_for('static', filename='images/rubber-duck.jpg') }}" alt="Rubber duck model"><img src="{{ url_for('static', filename='images/rubber-duck-brick-model.jpg') }}" alt="LEGO brick duck model"></div>
+            <h3>Bricks Needed for the Kit:</h3><ul class="brick-list"><li>1x1 bricks: 1 (pink/red color)</li><li>1x2 bricks: 5 (olive/gray color)</li><li>1x3 bricks: 5 (green color)</li><li>1x4 bricks: 6 (dark purple color)</li><li>1x6 bricks: 34 (purple color)</li><li>2x4 bricks: 5 (teal color)</li></ul><p class="compact"><strong>Total: 56 bricks</strong></p><p class="compact"><a href="{{ url_for('static', filename='downloads/Rubber_Duck_instructions.pdf') }}" target="_blank" rel="noopener">Download the complete assembly instructions</a></p><h3>Donate your kit to Second Chance Toys</h3><p class="compact">Second Chance Toys is a nonprofit organization that collects and distributes gently used toys to children in need. Your LEGO duck kit donation will brighten a child's day and inspire creativity!</p><p class="compact"><a href="https://www.secondchancetoys.org/" target="_blank" rel="noopener">Donate your kit to Second Chance Toys</a></p>
         </section>
     </main>
     <footer>Girl Scout Gold Award Project · Sahana Rajiv</footer>
