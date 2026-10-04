@@ -1,0 +1,1 @@
+- [GitHub push authentication](github-push-auth.md) — Git CLI authentication can fail while the GitHub API connection remains healthy.

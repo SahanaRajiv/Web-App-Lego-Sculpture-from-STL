@@ -1,0 +1,23 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "Convert STL mesh files into layered LEGO brick models with images, optional PDF instructions, and a 3D STL of the brick assembly.\r #LEGO\r #Architecture\r #Sculpture\r #Art\r ## Features\r - Upload `.stl` and choose processing options\r   - Number of layers and slicing direction (`X`, `Y`, `Z`)\r   - Make model hollow (shell extraction)\r   - Overlay previous layer for visual context\r   - Color bricks by shape\r   - Generate PDF assembly instructions\r   - Remove hanging bricks (non-hollow): ensures each brick has support below\r - Outputs\r   - Per-layer PNGs with grid and brick outlines\r   - Optional PDF instruction booklet\r   - Brick-assembled 3D model `.stl`",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/storage": "^7.18.0",
+    "@uppy/aws-s3": "^4.3.2",
+    "@uppy/core": "^4.5.3",
+    "@uppy/dashboard": "^4.4.3",
+    "@uppy/drag-drop": "^4.2.2",
+    "@uppy/file-input": "^4.2.2",
+    "@uppy/progress-bar": "^4.3.2",
+    "@uppy/react": "^4.5.2",
+    "google-auth-library": "^10.5.0"
+  }
+}

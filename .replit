@@ -1,0 +1,40 @@
+modules = ["python-3.11"]
+[agent]
+expertMode = true
+integrations = ["javascript_object_storage:1.0.0"]
+
+[nix]
+channel = "stable-25_05"
+packages = ["cacert", "freetype", "libjpeg", "libwebp", "zlib"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "STL to LEGO Converter"
+
+[[workflows.workflow]]
+name = "STL to LEGO Converter"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
+waitForPort = 5000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[deployment]
+deploymentTarget = "gce"
+run = ["python", "app.py"]

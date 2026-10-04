@@ -1,0 +1,13 @@
+uploads/
+static/results/
+*.stl
+__pycache__/
+*.pyc
+.cache/
+examples/
+attached_assets/
+.DS_Store
+*.log
+.git/
+.venv/
+.pythonlibs/.cache/

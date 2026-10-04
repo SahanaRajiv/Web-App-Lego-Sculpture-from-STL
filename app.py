@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, Response
 import os
 import time
 import re
@@ -9,17 +9,157 @@ import trimesh
 from PIL import Image, ImageDraw, ImageFont
 import random
 from collections import Counter
-from scipy.ndimage import label
+import requests
+from datetime import datetime, timedelta
+from google.cloud import storage
 
-from brickalize import (
-    Brick,
-    BrickSet,
-    BrickModel,
-    BrickModelVisualizer,
-    Brickalizer
-)
+def numpy_label(input_array):
+    """Pure numpy connected component labeling (4-connectivity for 2D)."""
+    labeled = np.zeros_like(input_array, dtype=int)
+    current_label = 0
+    rows, cols = input_array.shape
+    
+    for i in range(rows):
+        for j in range(cols):
+            if input_array[i, j] > 0 and labeled[i, j] == 0:
+                current_label += 1
+                stack = [(i, j)]
+                while stack:
+                    r, c = stack.pop()
+                    if r < 0 or r >= rows or c < 0 or c >= cols:
+                        continue
+                    if input_array[r, c] > 0 and labeled[r, c] == 0:
+                        labeled[r, c] = current_label
+                        stack.extend([(r-1, c), (r+1, c), (r, c-1), (r, c+1)])
+    
+    return labeled, current_label
+
+from brickalize_bricks import Brick, BrickSet
+from brickalize_model import BrickModel
+from brickalize_converter import Brickalizer
+from lightweight_visualizer import LightweightVisualizer as BrickModelVisualizer
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+
+REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106"
+
+def get_storage_client():
+    try:
+        return storage.Client(
+            credentials=None,
+            project="",
+        )
+    except Exception:
+        try:
+            creds_config = {
+                "audience": "replit",
+                "subject_token_type": "access_token",
+                "token_url": f"{REPLIT_SIDECAR_ENDPOINT}/token",
+                "type": "external_account",
+                "credential_source": {
+                    "url": f"{REPLIT_SIDECAR_ENDPOINT}/credential",
+                    "format": {
+                        "type": "json",
+                        "subject_token_field_name": "access_token",
+                    },
+                },
+            }
+            from google.auth import external_account
+            credentials = external_account.Credentials.from_info(creds_config)
+            return storage.Client(credentials=credentials, project="")
+        except Exception as e:
+            print(f"Failed to create storage client: {e}")
+            return None
+
+def get_object_storage_bucket():
+    bucket_id = os.environ.get("DEFAULT_OBJECT_STORAGE_BUCKET_ID", "")
+    if bucket_id:
+        return bucket_id
+    return os.environ.get("OBJECT_STORAGE_BUCKET", "")
+
+def sign_object_url_via_sidecar(bucket_name: str, object_name: str, method: str = "GET", ttl_sec: int = 3600) -> str:
+    expires_at = (datetime.utcnow() + timedelta(seconds=ttl_sec)).isoformat() + "Z"
+    
+    request_data = {
+        "bucket_name": bucket_name,
+        "object_name": object_name,
+        "method": method,
+        "expires_at": expires_at,
+    }
+    
+    response = requests.post(
+        f"{REPLIT_SIDECAR_ENDPOINT}/object-storage/signed-object-url",
+        json=request_data,
+        headers={"Content-Type": "application/json"},
+        timeout=5,
+    )
+    
+    if not response.ok:
+        raise Exception(f"Failed to sign object URL: {response.status_code}")
+    
+    return response.json()["signed_url"]
+
+def upload_to_object_storage(local_path: str, object_name: str) -> str:
+    bucket_name = get_object_storage_bucket()
+    if not bucket_name:
+        print("No bucket configured")
+        return None
+    
+    try:
+        upload_url = sign_object_url_via_sidecar(bucket_name, object_name, method="PUT", ttl_sec=900)
+        
+        with open(local_path, 'rb') as f:
+            content = f.read()
+        
+        ext = object_name.lower().split('.')[-1]
+        content_types = {
+            'stl': 'application/sla',
+            'pdf': 'application/pdf',
+            'png': 'image/png',
+        }
+        content_type = content_types.get(ext, 'application/octet-stream')
+        
+        response = requests.put(
+            upload_url,
+            data=content,
+            headers={"Content-Type": content_type},
+            timeout=60,
+        )
+        
+        if response.ok:
+            print(f"Uploaded {object_name} to object storage")
+            return object_name
+        else:
+            print(f"Upload failed: {response.status_code} {response.text}")
+    except Exception as e:
+        print(f"Object storage upload failed: {e}")
+    
+    return None
+
+def get_object_download_url(object_name: str, ttl_sec: int = 3600) -> str:
+    bucket_name = get_object_storage_bucket()
+    if not bucket_name:
+        return None
+    
+    try:
+        return sign_object_url_via_sidecar(bucket_name, object_name, method="GET", ttl_sec=ttl_sec)
+    except Exception as e:
+        print(f"Sidecar signing failed: {e}, trying GCS client")
+        try:
+            client = get_storage_client()
+            if client:
+                bucket = client.bucket(bucket_name)
+                blob = bucket.blob(object_name)
+                if blob.exists():
+                    url = blob.generate_signed_url(
+                        version="v4",
+                        expiration=timedelta(seconds=ttl_sec),
+                        method="GET",
+                    )
+                    return url
+        except Exception as e2:
+            print(f"GCS client signing also failed: {e2}")
+        return None
 
 app = Flask(__name__)
 
@@ -328,13 +468,15 @@ def overlay_image_layers(image_files, image_folder):
 
 def brick_model_to_array(brick_model):
     """Converts a BrickModel object back to a 3D NumPy array."""
-    array = np.zeros(brick_model.size, dtype=int)
+    size_x, size_y, size_z = brick_model.size
+    array = np.zeros((size_z, size_y, size_x), dtype=int)
     if brick_model.layers:
         for layer_num, layer_bricks in brick_model.layers.items():
             for brick in layer_bricks:
                 x, y = brick['position']
                 width, height = brick['size']
-                array[layer_num, y:y + height, x:x + width] = 1
+                if layer_num < size_z:
+                    array[layer_num, y:y + height, x:x + width] = 1
     return array
 
 
@@ -351,7 +493,7 @@ def remove_hanging_bricks(brick_model):
         lower_layer = array[z - 1, :, :]
         
         # Find bricks (connected components) in the current layer
-        labeled_layer, num_features = label(current_layer)
+        labeled_layer, num_features = numpy_label(current_layer)
         
         if num_features > 0:
             for i in range(1, num_features + 1):
@@ -375,19 +517,35 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('how_to_use.html')
+
+@app.route('/convert')
+def convert_page():
+    existing_files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith('.stl') and not f.endswith('_brick_model.stl')]
+    return render_template('convert.html', existing_files=existing_files)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'file' not in request.files:
-        return redirect(request.url)
-    file = request.files['file']
-    if file.filename == '':
-        return redirect(request.url)
-    if file and allowed_file(file.filename):
+    existing_file = request.form.get('existing_file', '')
+    
+    if existing_file:
+        filename = existing_file
+        stl_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if not os.path.exists(stl_file_path):
+            return redirect(url_for('index'))
+    else:
+        if 'file' not in request.files:
+            return redirect(url_for('index'))
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(url_for('index'))
+        if not (file and allowed_file(file.filename)):
+            return redirect(url_for('index'))
         filename = secure_filename(file.filename)
         stl_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(stl_file_path)
+    
+    if True:
 
         grid_voxel_count = int(request.form['grid_voxel_count'])
         grid_direction = request.form['grid_direction']
@@ -475,7 +633,24 @@ def upload_file():
         else:
             pdf_filename = None
 
-        return render_template('results.html', image_files=image_files, model_filename=model_filename, result_folder=os.path.splitext(filename)[0], cache_buster=int(time.time()), pdf_filename=pdf_filename)
+        # Upload files to object storage for persistent access
+        stl_object_name = None
+        pdf_object_name = None
+        
+        if os.path.exists(model_path):
+            stl_object_name = upload_to_object_storage(model_path, f"models/{model_filename}")
+        
+        if generate_pdf and os.path.exists(pdf_path):
+            pdf_object_name = upload_to_object_storage(pdf_path, f"pdfs/{pdf_filename}")
+
+        return render_template('results.html', 
+                             image_files=image_files, 
+                             model_filename=model_filename, 
+                             result_folder=os.path.splitext(filename)[0], 
+                             cache_buster=int(time.time()), 
+                             pdf_filename=pdf_filename,
+                             stl_object_name=stl_object_name,
+                             pdf_object_name=pdf_object_name)
 
 @app.route('/history')
 def history():
@@ -500,11 +675,35 @@ def result_image(result_folder, filename):
 
 @app.route('/download/<filename>')
 def download_model(filename):
-    return send_from_directory(app.config['RESULT_FOLDER'], filename)
+    # Try object storage first
+    object_name = f"models/{filename}"
+    download_url = get_object_download_url(object_name)
+    if download_url:
+        return redirect(download_url)
+    # Fall back to local file with explicit mimetype
+    local_path = os.path.join(app.config['RESULT_FOLDER'], filename)
+    if os.path.exists(local_path):
+        try:
+            return send_from_directory(app.config['RESULT_FOLDER'], filename, as_attachment=True, mimetype='application/sla')
+        except OSError:
+            return "File not available", 404
+    return "File not found", 404
 
 @app.route('/download_pdf/<filename>')
 def download_pdf(filename):
-    return send_from_directory(app.config['RESULT_FOLDER'], filename)
+    # Try object storage first
+    object_name = f"pdfs/{filename}"
+    download_url = get_object_download_url(object_name)
+    if download_url:
+        return redirect(download_url)
+    # Fall back to local file
+    local_path = os.path.join(app.config['RESULT_FOLDER'], filename)
+    if os.path.exists(local_path):
+        try:
+            return send_from_directory(app.config['RESULT_FOLDER'], filename, as_attachment=True, mimetype='application/pdf')
+        except OSError:
+            return "File not available", 404
+    return "File not found", 404
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(host='0.0.0.0', port=5000, debug=True) 

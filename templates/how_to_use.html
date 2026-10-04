@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>How to Use - Sahana's STL to LEGO Converter</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .navbar {
+            background: rgba(255,255,255,0.95) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: #764ba2 !important;
+        }
+        .nav-link {
+            font-weight: 600;
+            color: #667eea !important;
+        }
+        .content-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #764ba2;
+            font-weight: 700;
+        }
+        h3 {
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 30px;
+        }
+        .step-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        .gallery-img {
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            max-width: 100%;
+            margin: 15px 0;
+        }
+        .option-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+        .option-title {
+            font-weight: 600;
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Sahana's STL to LEGO</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('index') }}">How to Use</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('convert_page') }}">Convert</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('history') }}">History</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="content-card">
+            <div class="text-center mb-4">
+                <h1>How to Use This App</h1>
+                <p class="lead text-muted">Transform your 3D models into buildable LEGO creations!</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/instruction_booklet.jpeg') }}" class="gallery-img" alt="LEGO Instruction Booklet">
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/lego_duck.jpeg') }}" class="gallery-img" alt="LEGO Duck Model">
+                </div>
+            </div>
+            
+            <h3><span class="step-number">1</span> Upload Your STL File</h3>
+            <p>Select an STL file from your computer or choose from previously uploaded files. STL is a common 3D model format used in CAD software and 3D printing.</p>
+            
+            <h3><span class="step-number">2</span> Configure Options</h3>
+            
+            <div class="option-card">
+                <p class="option-title">Number of Layers (10-100)</p>
+                <p class="mb-0">Controls the resolution of your LEGO model. More layers = more detail but more bricks needed.</p>
+            </div>
+            
+            <div class="option-card">
+                <p class="option-title">Direction (X, Y, Z)</p>
+                <p class="mb-0">Choose which axis to slice the model along. Z is typically "up" for most models.</p>
+            </div>
+            
+            <div class="option-card">
+                <p class="option-title">Make Model Hollow</p>
+                <p class="mb-0">Creates a shell version of your model to save bricks. Great for larger builds!</p>
+            </div>
+            
+            <div class="option-card">
+                <p class="option-title">Overlay Layers</p>
+                <p class="mb-0">Shows the previous layer as a faded guide in each layer image. Helps with building!</p>
+            </div>
+            
+            <div class="option-card">
+                <p class="option-title">Create PDF Instructions</p>
+                <p class="mb-0">Generates a downloadable PDF booklet with assembly instructions for each layer.</p>
+            </div>
+            
+            <div class="option-card">
+                <p class="option-title">Color Bricks by Shape</p>
+                <p class="mb-0">Different brick sizes get different colors in the instructions for easy identification.</p>
+            </div>
+            
+            <div class="option-card">
+                <p class="option-title">Remove Hanging Bricks</p>
+                <p class="mb-0">Ensures every brick has support below it. Recommended for solid (non-hollow) models.</p>
+            </div>
+            
+            <h3><span class="step-number">3</span> Click Convert</h3>
+            <p>The app will process your model and generate:</p>
+            <ul>
+                <li><strong>PDF instructions</strong> - Printable layer-by-layer assembly guide with brick counts</li>
+                <li><strong>3D brick model</strong> - Downloadable STL of the LEGO version</li>
+            </ul>
+            
+            <h3><span class="step-number">4</span> Build Your Creation!</h3>
+            <p>Follow the layer-by-layer instructions to build your LEGO masterpiece. Start from layer 0 (the bottom) and work your way up!</p>
+            
+            <div class="text-center mt-5">
+                <a href="{{ url_for('convert_page') }}" class="btn btn-lg btn-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; padding: 12px 40px;">Start Converting</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

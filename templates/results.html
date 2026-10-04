@@ -3,23 +3,73 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>LEGO Model Results</title>
+    <title>Results - Sahana's STL to LEGO Converter</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .layer-image {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 1rem;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .navbar {
+            background: rgba(255,255,255,0.95) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: #764ba2 !important;
+        }
+        .nav-link {
+            font-weight: 600;
+            color: #667eea !important;
+        }
+        .content-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #764ba2;
+            font-weight: 700;
+        }
+        .btn-download {
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+            margin: 5px;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        .action-buttons {
+            text-align: center;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ url_for('index') }}">STL to LEGO</a>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Sahana's STL to LEGO</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('index') }}">Convert</a>
+                    <a class="nav-link" href="{{ url_for('index') }}">How to Use</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('convert_page') }}">Convert</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('history') }}">History</a>
@@ -28,24 +78,21 @@
         </div>
     </nav>
     <div class="container">
-        <h1 class="mt-5">Your LEGO Model</h1>
-        <a href="{{ url_for('download_model', filename=model_filename) }}" class="btn btn-success my-3">Download Full 3D Model (.stl)</a>
-        {% if pdf_filename %}
-        <a href="{{ url_for('download_pdf', filename=pdf_filename) }}" class="btn btn-danger my-3">Download PDF Instructions</a>
-        {% endif %}
-        <a href="{{ url_for('index') }}" class="btn btn-primary my-3">Convert another file</a>
-        <div class="row">
-            {% for image_file in image_files %}
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <img src="{{ url_for('result_image', result_folder=result_folder, filename=image_file, v=cache_buster) }}" class="card-img-top layer-image" alt="{{ image_file }}">
-                    <div class="card-body">
-                        <p class="card-text">Layer {{ loop.index }}</p>
-                    </div>
-                </div>
+        <div class="content-card">
+            <h1 class="text-center mb-4">Your LEGO Model</h1>
+            
+            <div class="action-buttons">
+                <a href="{{ url_for('download_model', filename=model_filename) }}" class="btn btn-success btn-download">Download 3D Model (.stl)</a>
+                {% if pdf_filename %}
+                <a href="{{ url_for('download_pdf', filename=pdf_filename) }}" class="btn btn-danger btn-download">Download PDF Instructions</a>
+                {% endif %}
+                <a href="{{ url_for('convert_page') }}" class="btn btn-primary btn-download">Convert Another</a>
             </div>
-            {% endfor %}
+            
+            <div class="text-center mt-4">
+                <p class="text-muted">Your PDF instructions contain layer-by-layer building guides with brick placement details.</p>
+            </div>
         </div>
     </div>
 </body>
-</html> 
+</html>
