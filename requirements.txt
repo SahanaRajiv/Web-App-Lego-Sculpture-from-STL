@@ -4,6 +4,7 @@ gunicorn
 numpy
 pillow
 trimesh
+rtree
 tqdm
 google-cloud-storage
 requests
