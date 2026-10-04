@@ -11,8 +11,7 @@
         :root { --ink: #38383c; --heading: #403c4e; --link: #cc3000; --peach: #ffd8cc; --outline: #d7b9ae; }
         * { box-sizing: border-box; }
         html { background: #fff; }
-        body { min-width: 0; margin: 0; color: var(--ink); background: #fff; font-family: 'Open Sans', Arial, sans-serif; font-size: 16px; line-height: 1.58; }
-        body::before { position: fixed; z-index: -1; inset: 0; content: ''; background: linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.89)), url("{{ url_for('static', filename='images/gamma-project-background.png') }}") center top / cover no-repeat; }
+        body { min-width: 0; margin: 0; color: var(--ink); background: linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.89)), url("{{ url_for('static', filename='images/gamma-project-background.png') }}") center top / cover fixed no-repeat; font-family: 'Open Sans', Arial, sans-serif; font-size: 16px; line-height: 1.58; }
         a { color: var(--link); font-weight: 700; text-decoration: underline; text-underline-offset: .12em; }
         .deck { width: min(1160px, 100%); margin: 0 auto; padding: 0 clamp(18px, 5.1vw, 63px); }
         .gamma-card { margin: 0; padding: 74px 0; }
