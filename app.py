@@ -171,6 +171,10 @@ STARTER_MODEL_LABELS = {
     'Rubber_Duck.stl': 'Rubber Duck (starter model)',
     'StanfordBunny_fixed.stl': 'Stanford Bunny (starter model)',
 }
+USER_MANUAL_URL = os.environ.get(
+    'USER_MANUAL_URL',
+    'https://user-manual-lego-web-builder.onrender.com',
+)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['RESULT_FOLDER'] = RESULT_FOLDER
 
@@ -519,9 +523,17 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.context_processor
+def inject_site_links():
+    return {'user_manual_url': USER_MANUAL_URL}
+
 @app.route('/')
 def index():
-    return render_template('how_to_use.html')
+    return render_template('landing.html')
+
+@app.route('/how-to-use')
+def how_to_use():
+    return redirect(USER_MANUAL_URL)
 
 @app.route('/convert')
 def convert_page():
