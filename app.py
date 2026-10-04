@@ -167,6 +167,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 RESULT_FOLDER = 'static/results'
 ALLOWED_EXTENSIONS = {'stl'}
+STARTER_MODEL_LABELS = {
+    'Rubber_Duck.stl': 'Rubber Duck (starter model)',
+    'StanfordBunny_fixed.stl': 'Stanford Bunny (starter model)',
+}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['RESULT_FOLDER'] = RESULT_FOLDER
 
@@ -522,7 +526,12 @@ def index():
 @app.route('/convert')
 def convert_page():
     existing_files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith('.stl') and not f.endswith('_brick_model.stl')]
-    return render_template('convert.html', existing_files=existing_files)
+    existing_files.sort(key=lambda filename: (filename not in STARTER_MODEL_LABELS, filename.lower()))
+    return render_template(
+        'convert.html',
+        existing_files=existing_files,
+        starter_model_labels=STARTER_MODEL_LABELS,
+    )
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -706,4 +715,4 @@ def download_pdf(filename):
     return "File not found", 404
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True) 
+    app.run(host='0.0.0.0', port=5000, debug=True)

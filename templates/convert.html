@@ -207,16 +207,16 @@
             <form action="/upload" method="post" enctype="multipart/form-data" id="convertForm">
                 <h4 class="section-title">Select Your Model</h4>
                 <div class="form-group">
-                    <label for="file">Upload new STL file</label>
+                    <label for="file">Upload a new STL file</label>
                     <input type="file" class="form-control-file" id="file" name="file" accept=".stl">
                 </div>
                 {% if existing_files %}
                 <div class="form-group">
-                    <label for="existing_file">Or select from existing files</label>
+                    <label for="existing_file">Or start with a bundled model</label>
                     <select class="form-control" id="existing_file" name="existing_file" style="color: #333;">
                         <option value="" style="color: #333;">-- Select existing file --</option>
                         {% for file in existing_files %}
-                        <option value="{{ file }}" style="color: #333;">{{ file }}</option>
+                        <option value="{{ file }}" style="color: #333;"{% if file == 'Rubber_Duck.stl' %} selected{% endif %}>{{ starter_model_labels.get(file, file) }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -272,6 +272,19 @@
     </div>
 
     <script>
+        const fileInput = document.getElementById('file');
+        const existingFileSelect = document.getElementById('existing_file');
+
+        // A newly selected upload always takes precedence over the starter model.
+        if (fileInput && existingFileSelect) {
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) existingFileSelect.value = '';
+            });
+            existingFileSelect.addEventListener('change', function() {
+                if (this.value) fileInput.value = '';
+            });
+        }
+
         document.getElementById('convertForm').addEventListener('submit', function() {
             document.getElementById('loadingOverlay').style.display = 'flex';
             let percent = 0;
